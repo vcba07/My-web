@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cielito’s Little Universe 💗 | Un regalo de cumpleaños especial</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        creamBg: '#FFFDF9',
+                        pinkSoft: '#FFE5EC',
+                        pinkMid: '#FFC2D1',
+                        pinkDeep: '#FF94B4',
+                        pinkAccent: '#FF5C8A',
+                        snoopyRed: '#E53935',
+                        snoopyInk: '#2D232E',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        handwritten: ['Caveat', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #FFFDF9;
+            color: #2D232E;
+            overflow-x: hidden;
+        }
+
+        /* Peanuts Comic Style Border */
+        .peanuts-card {
+            background-color: #FFFFFF;
+            border: 2.5px solid #2D232E;
+            box-shadow: 4px 4px 0px #FFC2D1;
+            border-radius: 20px;
+        }
+        .peanuts-card-sm {
+            background-color: #FFFFFF;
+            border: 2px solid #2D232E;
+            box-shadow: 3px 3px 0px #FF94B4;
+            border-radius: 14px;
+        }
+
+        /* Envelope animation */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        /* Pulse and Spin Animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        @keyframes spinVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spinning-vinyl {
+            animation: spinVinyl 10s linear infinite;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFFDF9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFC2D1;
+            border-radius: 4px;
+            border: 1px solid #2D232E;
+        }
+
+        .hidden-star-found {
+            filter: drop-shadow(0 0 10px #FF5C8A);
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-pinkMid selection:text-snoopyInk">
+
+    <!-- Header Progress Bar -->
+    <div id="progress-bar" class="fixed top-0 left-0 h-1.5 bg-pinkAccent z-50 transition-all duration-200" style="width: 0%;"></div>
+
+    <!-- Background Canvas for Floating Hearts -->
+    <canvas id="hero-hearts-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Top Navigation Bar -->
+    <header class="fixed top-2 left-0 right-0 z-40 px-4">
+        <div class="max-w-5xl mx-auto bg-white/90 backdrop-blur-md border-2 border-snoopyInk rounded-full px-4 py-2 flex items-center justify-between shadow-md">
+            <a href="#sec-01" class="flex items-center gap-2 font-handwritten text-xl font-bold text-pinkAccent">
+                <span>Cielito’s Universe</span>
+                <!-- Hidden Secret Heart #1 in Header -->
+                <button onclick="unlockSecretHeart()" class="text-pinkMid hover:text-pinkAccent transition-transform hover:scale-125 focus:outline-none" title="Un corazón secreto escondido 💖">
+                    <i class="fa-solid fa-heart text-xs"></i>
+                </button>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-4 text-xs font-semibold text-gray-700">
+                <a href="#sec-02" class="hover:text-pinkAccent transition">Carta</a>
+                <a href="#sec-03" class="hover:text-pinkAccent transition">Historia</a>
+                <a href="#sec-05" class="hover:text-pinkAccent transition">16 Razones</a>
+                <a href="#sec-08" class="hover:text-pinkAccent transition">Rincón</a>
+                <a href="#sec-10" class="hover:text-pinkAccent transition">Deseo</a>
+                <a href="#sec-13" class="hover:text-pinkAccent transition">Cupones</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <button onclick="triggerConfetti()" class="px-3 py-1 bg-pinkSoft hover:bg-pinkMid text-snoopyInk text-xs font-bold rounded-full border border-snoopyInk transition" title="Vamosss Cieliitooo">
+                    ✨ Vamosss Cieliitooo
+                </button>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-snoopyInk text-lg px-2 focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden max-w-5xl mx-auto mt-2 bg-white border-2 border-snoopyInk rounded-2xl p-4 shadow-xl flex flex-col gap-2 text-sm font-medium text-center">
+            <a href="#sec-02" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">02. Carta</a>
+            <a href="#sec-03" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">03. Historia</a>
+            <a href="#sec-05" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">05. 16 Razones</a>
+            <a href="#sec-06" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">06. Rinconcito Snoopy</a>
+            <a href="#sec-08" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">08. Nuestro Rincón</a>
+            <a href="#sec-10" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">10. Soplar Velitas</a>
+            <a href="#sec-12" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">12. Quiz</a>
+            <a href="#sec-15" onclick="toggleMobileMenu()" class="py-1 hover:bg-pinkSoft rounded">15. Mensaje Escondido</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="relative z-10 max-w-4xl mx-auto px-4 pt-20 pb-24 space-y-24">
+
+        <!-- 01 — BIENVENIDA -->
+        <section id="sec-01" class="min-h-[85vh] flex flex-col items-center justify-center text-center relative pt-8">
+            <div class="peanuts-card p-8 sm:p-12 w-full max-w-2xl relative overflow-hidden bg-gradient-to-b from-white to-pinkSoft/30">
+                <div class="inline-block px-4 py-1 bg-pinkSoft border border-snoopyInk rounded-full text-xs font-bold text-pinkAccent mb-4 tracking-wider uppercase">
+                    19 de Noviembre, 2026 🎂
+                </div>
+                
+                <h1 class="text-4xl sm:text-6xl font-serif font-bold text-snoopyInk tracking-tight leading-tight">
+                    Un pequeño universo <br><span class="font-handwritten text-pinkAccent text-5xl sm:text-7xl">para ti, mi Cielito</span>
+                </h1>
+
+                <p class="mt-4 text-gray-700 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+                    Un rincócitop especial en internet y mi corashon hecho a mano por mí con todo mi amor, lleno de nuestros recuerdos, sorpresas y detalles creados únicamente para tí, mi niña.
+                </p>
+
+                <!-- Charlie Brown & Snoopy Doghouse Image -->
+                <div class="my-6 flex justify-center items-center">
+                    <img src="https://pngimg.com/uploads/snoopy/snoopy_PNG43.png" 
+                         onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/2/22/Charlie_Brown_and_Snoopy.png';" 
+                         alt="Charlie Brown y Snoopy en la casita roja" 
+                         class="w-48 sm:w-56 h-auto drop-shadow-md animate-float object-contain max-h-48">
+                </div>
+
+                <a href="#sec-02" class="inline-flex items-center gap-2 px-8 py-3.5 bg-pinkAccent hover:bg-pinkDeep text-white font-bold rounded-full border-2 border-snoopyInk shadow-md transition transform hover:scale-105 active:scale-95 text-sm sm:text-base">
+                    <span>Entrar a tu universo jeje</span>
+                    <i class="fa-solid fa-arrow-down"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 02 — UNA CARTITA PARA TI -->
+        <section id="sec-02" class="scroll-mt-24 text-center">
+            <div class="text-center mb-6">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 02</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk">Una cartita para ti</h2>
+                <p class="text-xs text-gray-500 mt-1">Haz clic en el sobre para abrir la carta mi niña</p>
+            </div>
+
+            <div class="max-w-xl mx-auto">
+                <div id="envelope-card" onclick="openWelcomeLetter()" class="peanuts-card p-8 bg-pinkSoft hover:bg-pinkMid/40 cursor-pointer transition-all duration-300 relative group overflow-hidden">
+                    <div id="envelope-icon-container" class="space-y-4 py-6">
+                        <div class="w-20 h-20 bg-white border-2 border-snoopyInk rounded-full flex items-center justify-center mx-auto text-pinkAccent text-3xl shadow-sm group-hover:scale-110 transition">
+                            <i class="fa-solid fa-envelope-open-text"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-snoopyInk">Para: Mi Cielito lindaa 💌</h3>
+                        <p class="text-xs text-gray-600">Presiona aquí para desplegar tu mensaje secreto jejeje</p>
+                    </div>
+
+                    <div id="letter-content" class="hidden text-left space-y-4 bg-white p-6 rounded-xl border-2 border-snoopyInk text-sm sm:text-base text-gray-800 leading-relaxed font-sans">
+                        <p class="font-handwritten text-3xl font-bold text-pinkAccent">¡Hola, mi niña hermosa!</p>
+                        <p>
+                            Bienvenida a tu pequeño universo mi niña, he creado cada cosita de este sitio pensando en ti, en tu sonrisa y en lo inmensamente afortunado que me siento de ser quien camina a tu lado, gracias por ser tu mi amorsh.
+                        </p>
+                        <p>
+                            Hoy, en tu cumple, quiero recordar contigo algunos de nuestros mejores momentos, contarte unas de la miles de razones por las que me haces inmensamente feliz y regalarte un rincón al que siempre puedas volver cuando quieras sentir un abracito mío.
+                        </p>
+                        <p class="italic text-gray-600">
+                            "Eres mi persona favorita en el mundo entero, mi cielito linda."
+                        </p>
+                        <div class="pt-4 border-t border-dashed border-gray-300 flex justify-between items-center text-xs font-bold text-pinkAccent">
+                            <span>Con todo mi amor para ti ❤️</span>
+                            <span>Tu niño que te ama</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 — NUESTRA HISTORIA -->
+        <section id="sec-03" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 03</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk">Nuestra historia</h2>
+                <p class="text-xs text-gray-500 mt-1">Los capítulos más bonitos que hemos escrito juntos</p>
+            </div>
+
+            <div class="relative border-l-2 border-snoopyInk ml-4 sm:ml-32 space-y-8 pl-6 sm:pl-8">
+                <!-- Milestone 1 -->
+                <div class="relative peanuts-card-sm p-5">
+                    <div class="absolute -left-[35px] sm:-left-[43px] top-4 w-6 h-6 bg-pinkAccent rounded-full border-2 border-snoopyInk flex items-center justify-center text-white text-[10px]">
+                        ❤️
+                    </div>
+                    <span class="text-xs font-bold text-pinkAccent tracking-wider">EL COMIENZO JEJE</span>
+                    <h3 class="text-lg font-bold text-snoopyInk mt-0.5">El día que nos conocimos</h3>
+                    <p class="text-xs text-gray-500 font-medium">Fecha especial mi niña</p>
+                    <p class="text-sm text-gray-700 mt-2">
+                        Ese momento mágico en el que nuestras vidas se cruzaron y todo comenzó a tener un color distinto y más bonito.
+                    </p>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="relative peanuts-card-sm p-5">
+                    <div class="absolute -left-[35px] sm:-left-[43px] top-4 w-6 h-6 bg-pinkMid rounded-full border-2 border-snoopyInk flex items-center justify-center text-snoopyInk text-[10px]">
+                        🐾
+                    </div>
+                    <span class="text-xs font-bold text-pinkAccent tracking-wider">NUESTROS PRIMEROS PASOS JUNTOSH</span>
+                    <h3 class="text-lg font-bold text-snoopyInk mt-0.5">Risas e historias infinitash</h3>
+                    <p class="text-xs text-gray-500 font-medium">Un beso y muchas sonrisas</p>
+                    <p class="text-sm text-gray-700 mt-2">
+                        Cuando nos dimos cuenta de que podíamos hablar durante horas sin que el tiempo importara.
+                    </p>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="relative peanuts-card-sm p-5">
+                    <div class="absolute -left-[35px] sm:-left-[43px] top-4 w-6 h-6 bg-pinkAccent rounded-full border-2 border-snoopyInk flex items-center justify-center text-white text-[10px]">
+                        ⭐
+                    </div>
+                    <span class="text-xs font-bold text-pinkAccent tracking-wider">HOY & SIEMPRE</span>
+                    <h3 class="text-lg font-bold text-snoopyInk mt-0.5">Celebrando tu cumpleaños</h3>
+                    <p class="text-xs text-gray-500 font-medium">19 de Noviembre</p>
+                    <p class="text-sm text-gray-700 mt-2">
+                        Celebrandoo nuestro amor, tu existencia y agradeciendo cada día a tu lado, mi cielito.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 — PEQUEÑOS MOMENTOS -->
+        <section id="sec-04" class="scroll-mt-24">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 04</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk">Pequeños momentos</h2>
+                <p class="text-xs text-gray-500 mt-1">Instantáneas ilustradas de nuestra felicidad, esto luego lo completaremos jeje</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div onclick="showMomentModal('Paseos bajo el atardecer 🌅', 'Nuestros paseos tranquilos donde nos tomamos de la mano y arreglamos el mundo con conversaciones dulces.')" class="peanuts-card p-4 text-center cursor-pointer hover:rotate-1 transition-transform">
+                    <div class="w-full h-44 bg-pinkSoft rounded-xl border-2 border-snoopyInk flex flex-col items-center justify-center p-4">
+                        <i class="fa-solid fa-cloud-sun text-4xl text-pinkAccent mb-2"></i>
+                        <span class="text-xs font-bold text-snoopyInk">Atardeceres juntos</span>
+                    </div>
+                    <p class="font-handwritten text-2xl font-bold mt-3 text-snoopyInk">Caminatas de la mano</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div onclick="showMomentModal('Noches de películas y cobijas 🍿', 'Estar acurrucados viendo nuestras series favoritas mientras compartimos comida rica y abrazos.')" class="peanuts-card p-4 text-center cursor-pointer hover:-rotate-1 transition-transform">
+                    <div class="w-full h-44 bg-pinkSoft rounded-xl border-2 border-snoopyInk flex flex-col items-center justify-center p-4">
+                        <i class="fa-solid fa-mug-hot text-4xl text-pinkAccent mb-2"></i>
+                        <span class="text-xs font-bold text-snoopyInk">Charlas y café</span>
+                    </div>
+                    <p class="font-handwritten text-2xl font-bold mt-3 text-snoopyInk">Tardes acurrucados</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div onclick="showMomentModal('Tus risas espontáneas 💖', 'Verte reír de verdad es mi cosa preferida en el universo entero. Iluminas cualquier lugar.')" class="peanuts-card p-4 text-center cursor-pointer hover:rotate-1 transition-transform">
+                    <div class="w-full h-44 bg-pinkSoft rounded-xl border-2 border-snoopyInk flex flex-col items-center justify-center p-4">
+                        <i class="fa-solid fa-[#FF5C8A] fa-face-smile-beam text-4xl text-pinkAccent mb-2"></i>
+                        <span class="text-xs font-bold text-snoopyInk">Tu hermosa sonrisa</span>
+                    </div>
+                    <p class="font-handwritten text-2xl font-bold mt-3 text-snoopyInk">Mi sonrisa favorita</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 — 16 RAZONES PARA SONREÍR -->
+        <section id="sec-05" class="scroll-mt-24">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 05</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk">16 razones para sonreír</h2>
+                <p class="text-xs text-gray-500 mt-1">Haz clic en cada corazón para revelar un motivo especial por el que te amo</p>
+            </div>
+
+            <div id="reasons-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <!-- JavaScript will populate 16 heart cards dynamically -->
+            </div>
+        </section>
+
+        <!-- 06 — EL RINCONCITO DE SNOOPY -->
+        <section id="sec-06" class="scroll-mt-24">
+            <div class="peanuts-card p-6 sm:p-10 bg-white relative overflow-hidden">
+                <div class="text-center mb-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-snoopyRed">Snoopy & Woodstock Corner</span>
+                    <h2 class="text-3xl font-serif font-bold text-snoopyInk">El rinconcito de Snoopy</h2>
+                    <p class="text-xs text-gray-500 mt-1">Un espacio dedicado a alegrar el día de mi niña</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center justify-around gap-8">
+                    <!-- Snoopy Leaning on Red Doghouse Image -->
+                    <div class="relative w-56 h-56 flex items-center justify-center">
+                        <img src="https://pngimg.com/uploads/snoopy/snoopy_PNG1.png" 
+                             onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/5/53/Snoopy_Peanuts.png';" 
+                             alt="Snoopy recostado en su casita roja" 
+                             class="w-full h-full object-contain drop-shadow-md">
+                    </div>
+
+                    <!-- Interactive Quote Bubbles -->
+                    <div class="space-y-4 max-w-sm w-full">
+                        <div onclick="showWoodstockToast('Snoopy dice: ¡Cielito, eres la niña más hermosa de todo el mundo! ❤️')" class="bg-pinkSoft p-4 rounded-2xl border-2 border-snoopyInk cursor-pointer hover:bg-pinkMid/50 transition">
+                            <p class="text-xs font-bold text-pinkAccent uppercase mb-1">Pensamiento #1 🐾</p>
+                            <p class="text-sm text-gray-800">"El amor es abrazar fuerte a mi niña y recordarle lo especial que es."</p>
+                        </div>
+                        <div onclick="showWoodstockToast('Woodstock dice: ¡Feliz Cumpleaños a nuestro cielito! 🎉')" class="bg-pinkSoft p-4 rounded-2xl border-2 border-snoopyInk cursor-pointer hover:bg-pinkMid/50 transition">
+                            <p class="text-xs font-bold text-pinkAccent uppercase mb-1">Pensamiento #2 🐥</p>
+                            <p class="text-sm text-gray-800">"Un día a tu lado siempre es mi día favorito de la semana."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 — ÁBREME CUANDO... -->
+        <section id="sec-07" class="scroll-mt-24">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 07</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk">Ábreme cuando...</h2>
+                <p class="text-xs text-gray-500 mt-1">Cartitas preparadas para diferentes momentos</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Note 1 -->
+                <div onclick="openOpenWhenModal('Ábreme cuando estés triste 🌧️', 'Si hoy las cosas no salieron bien, recuerda que estoy aquí para tí, tómate un respiro, bebe agua y recuerda que eres más fuerte y capaz de lo que crees, nada en este mundo dura para siempre, excepto mi cariño por tí, te mando un abrazo enorme.')" class="peanuts-card p-5 cursor-pointer hover:scale-102 transition flex items-center gap-4 bg-white">
+                    <div class="w-12 h-12 bg-pinkSoft rounded-full border-2 border-snoopyInk flex items-center justify-center text-pinkAccent text-xl shrink-0">
+                        🌧️
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-snoopyInk text-base">...estés triste</h3>
+                        <p class="text-xs text-gray-500">Un abracito cuando lo necesites shi</p>
+                    </div>
+                </div>
+
+                <!-- Note 2 -->
+                <div onclick="openOpenWhenModal('Ábreme cuando me extrañes 💭', 'Si me extrañas en este instante, cierra los ojos un segundo, recuerda mi voz diciéndote lo mucho que te amo, pronto estaremos juntos riéndonos de cualquier tontería. siempre estoy contigo en el corazón, cielito.')" class="peanuts-card p-5 cursor-pointer hover:scale-102 transition flex items-center gap-4 bg-white">
+                    <div class="w-12 h-12 bg-pinkSoft rounded-full border-2 border-snoopyInk flex items-center justify-center text-pinkAccent text-xl shrink-0">
+                        💭
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-snoopyInk text-base">...me extrañes</h3>
+                        <p class="text-xs text-gray-500">Un recordatorio de que siempre estoy cerca</p>
+                    </div>
+                </div>
+
+                <!-- Note 3 -->
+                <div onclick="openOpenWhenModal('Ábreme cuando tengas un mal día 🌩️', 'Respira profundo, mi niña. Los días difíciles existen para enseñarnos a valorar la calma, tú puedes con todo lo que se te presente, estoy muy orgulloso de tí y de la gran persona que eres.')" class="peanuts-card p-5 cursor-pointer hover:scale-102 transition flex items-center gap-4 bg-white">
+                    <div class="w-12 h-12 bg-pinkSoft rounded-full border-2 border-snoopyInk flex items-center justify-center text-pinkAccent text-xl shrink-0">
+                        🌩️
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-snoopyInk text-base">...tengas un mal día</h3>
+                        <p class="text-xs text-gray-500">Palabras de ánimo para recuperar tu sonrisa hermosa</p>
+                    </div>
+                </div>
+
+                <!-- Note 4 -->
+                <div onclick="openOpenWhenModal('Ábreme cuando necesites recordar cuánto te quiero ❤️', 'Si alguna vez lo dudas por un segundo: te amo con toda la fuerza de mi ser. Eres mi alma, mi alegría, la razón de mis sonrisas diarias y de cada respiro mío, nunca lo olvides.')" class="peanuts-card p-5 cursor-pointer hover:scale-102 transition flex items-center gap-4 bg-white">
+                    <div class="w-12 h-12 bg-pinkSoft rounded-full border-2 border-snoopyInk flex items-center justify-center text-pinkAccent text-xl shrink-0">
+                        💖
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-snoopyInk text-base">...necesites recordar mi amor</h3>
+                        <p class="text-xs text-gray-500">Un recordatorio incondicional</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 08 — NUESTRO RINCÓN ESPECIAL -->
+        <section id="sec-08" class="scroll-mt-24">
+            <div class="peanuts-card p-8 sm:p-12 bg-gradient-to-br from-white via-pinkSoft/40 to-pinkMid/20 text-center relative overflow-hidden backdrop-blur-sm border-2 border-snoopyInk shadow-xl rounded-3xl">
+                <!-- Floating background glow decoration -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-pinkMid/30 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-pinkSoft rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10">
+                    <span class="inline-block px-3 py-1 bg-white/80 border border-snoopyInk rounded-full text-[10px] font-bold tracking-widest text-pinkAccent uppercase mb-2 shadow-sm">
+                        ✦ Sección 08 ✦
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-snoopyInk tracking-tight">Nuestro rincón especial</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 mt-1 font-light italic">Un espacio tranqui y cálido hecho solo para tí mi niña ✨</p>
+
+                    <!-- Aesthetic Hug Pulse Button -->
+                    <div class="my-8 flex flex-col items-center justify-center gap-4">
+                        <div class="relative group">
+                            <!-- Glow aura -->
+                            <div class="absolute inset-0 bg-pinkAccent/20 rounded-full blur-xl group-hover:bg-pinkAccent/40 transition-all duration-500"></div>
+                            
+                            <button onclick="sendInteractiveHug()" class="relative w-40 h-40 bg-white/90 hover:bg-white rounded-full border-2 border-snoopyInk flex flex-col items-center justify-center shadow-lg transition-all duration-500 transform group-hover:scale-105 active:scale-95 focus:outline-none">
+                                <span class="text-4xl text-pinkAccent transition-transform duration-300 group-hover:scale-125 group-hover:rotate-6">🫂</span>
+                                <span class="text-[11px] font-bold text-snoopyInk mt-2 tracking-wide uppercase">Abracito Virtual jeje</span>
+                                <span class="text-[9px] text-pinkAccent font-semibold mt-0.5 opacity-80">Toca para enviar ❤️</span>
+                            </button>
+                        </div>
+
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/80 border border-snoopyInk/30 rounded-full shadow-sm text-xs text-snoopyInk font-medium">
+                            <span>✨ Abracitos acumulados:</span>
+                            <span id="hug-count" class="font-bold text-pinkAccent">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Aesthetic Love Pill Capsules -->
+                    <div class="pt-4 border-t border-dashed border-snoopyInk/20 max-w-xl mx-auto">
+                        <p class="font-handwritten text-2xl font-bold text-snoopyInk mb-4">Cápsulas de tranquilidad & amor 💊✨</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openLovePill('Dosis de ternura 🌸', 'Recuerda que eres la persona más dulce y especial del mundo entero, nunca olvides lo mucho que te amo y lo bonito que haces mi universo.')" class="p-3.5 bg-white/80 hover:bg-white border-2 border-snoopyInk rounded-2xl transition-all duration-300 transform hover:-translate-y-1 shadow-sm text-xs font-semibold text-snoopyInk flex items-center justify-center gap-2 group">
+                                <span class="text-base group-hover:scale-120 transition-transform">🌸</span>
+                                <span>Dosis de ternura</span>
+                            </button>
+
+                            <button onclick="openLovePill('Cura para un día cansado ☕', 'Descansa, mi niña hermosa, tómate un respiro, relájate y recuerda que aquí estoy siempre para escucharte y consentirte.')" class="p-3.5 bg-white/80 hover:bg-white border-2 border-snoopyInk rounded-2xl transition-all duration-300 transform hover:-translate-y-1 shadow-sm text-xs font-semibold text-snoopyInk flex items-center justify-center gap-2 group">
+                                <span class="text-base group-hover:scale-120 transition-transform">☕</span>
+                                <span>Para el cansancio</span>
+                            </button>
+
+                            <button onclick="openLovePill('Sonrisa instantánea 🌟', 'Si estás leyendo esto, tienes que regalarme una sonrisita bonita ahora mismo jeje. ¡Tus sonrisas son mi motor favorito mi niña!')" class="p-3.5 bg-white/80 hover:bg-white border-2 border-snoopyInk rounded-2xl transition-all duration-300 transform hover:-translate-y-1 shadow-sm text-xs font-semibold text-snoopyInk flex items-center justify-center gap-2 group">
+                                <span class="text-base group-hover:scale-120 transition-transform">✨</span>
+                                <span>Sonrisa exprés</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 09 — UN CIELO LLENO DE DESEOS -->
+        <section id="sec-09" class="scroll-mt-24">
+            <div class="peanuts-card p-6 bg-snoopyInk text-white text-center relative overflow-hidden rounded-3xl">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkMid">Sección 09</span>
+                <h2 class="text-3xl font-serif font-bold text-white mt-1">Un cielo lleno de deseos</h2>
+                <p class="text-xs text-gray-300 mt-1">Haz clic en las estrellas brillantes para descubrir deseos para ti</p>
+
+                <!-- Interactive Star Sky Canvas -->
+                <div class="relative w-full h-64 my-4 bg-gray-950 rounded-2xl border-2 border-pinkMid/40 overflow-hidden flex items-center justify-center">
+                    <canvas id="sky-stars-canvas" class="absolute inset-0 cursor-pointer"></canvas>
+                    <p id="star-wish-output" class="relative z-10 font-serif italic text-base sm:text-lg text-pinkSoft px-6 max-w-md pointer-events-none drop-shadow">
+                        ✨ Toca una estrella para revelar un mensaje...
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10 — PIDE UN DESEO -->
+        <section id="sec-10" class="scroll-mt-24 text-center">
+            <div class="peanuts-card p-8 bg-white max-w-xl mx-auto">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 10</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk mt-1">Pide un deseo</h2>
+                <p class="text-xs text-gray-500 mt-1">Haz clic en las velitas para soplarlas y celebrar 🎂</p>
+
+                <!-- Birthday Cake Illustration -->
+                <div class="my-8 flex flex-col items-center justify-center">
+                    <!-- Candles -->
+                    <div class="flex gap-4 mb-1">
+                        <button onclick="blowCandle(1)" id="candle-1" class="flex flex-col items-center focus:outline-none">
+                            <span id="flame-1" class="text-amber-400 text-lg animate-bounce">🔥</span>
+                            <div class="w-3 h-8 bg-pinkMid border-2 border-snoopyInk rounded-t"></div>
+                        </button>
+                        <button onclick="blowCandle(2)" id="candle-2" class="flex flex-col items-center focus:outline-none">
+                            <span id="flame-2" class="text-amber-400 text-lg animate-bounce">🔥</span>
+                            <div class="w-3 h-8 bg-pinkAccent border-2 border-snoopyInk rounded-t"></div>
+                        </button>
+                        <button onclick="blowCandle(3)" id="candle-3" class="flex flex-col items-center focus:outline-none">
+                            <span id="flame-3" class="text-amber-400 text-lg animate-bounce">🔥</span>
+                            <div class="w-3 h-8 bg-pinkMid border-2 border-snoopyInk rounded-t"></div>
+                        </button>
+                    </div>
+
+                    <!-- Cake Tiers -->
+                    <div class="w-40 h-10 bg-pinkSoft border-2 border-snoopyInk rounded-t-xl flex items-center justify-center text-xs font-bold text-pinkAccent">
+                        🍓 Cielito 🍓
+                    </div>
+                    <div class="w-52 h-14 bg-white border-2 border-snoopyInk rounded-b-xl border-t-0 flex items-center justify-center">
+                        <span class="text-xs text-gray-500 font-bold">¡Feliz Cumpleaños! 🎉</span>
+                    </div>
+                </div>
+
+                <p id="cake-wishes-done" class="hidden text-pinkAccent font-bold text-sm">
+                    ¡Felicidades! Que todos los deseos de tu corazón se hagan realidad, mi niña bella ❤️
+                </p>
+            </div>
+        </section>
+
+        <!-- 11 — UN REGALITO SECRETO -->
+        <section id="sec-11" class="scroll-mt-24 text-center">
+            <div class="peanuts-card p-8 bg-pinkSoft">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 11</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk mt-1">Un regalito secreto</h2>
+                <p class="text-xs text-gray-600 mt-1">Una caja de sorpresas hecha especialmente para ti</p>
+
+                <div class="my-6">
+                    <button onclick="openSecretGift()" class="w-24 h-24 bg-white border-3 border-snoopyInk rounded-2xl shadow-md mx-auto flex flex-col items-center justify-center gap-1 hover:scale-105 transition transform active:scale-95">
+                        <span class="text-4xl">🎁</span>
+                        <span class="text-[10px] font-bold text-pinkAccent">ABRIR</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12 — ¿CUÁNTO NOS CONOCEMOS? -->
+        <section id="sec-12" class="scroll-mt-24">
+            <div class="peanuts-card p-6 sm:p-8 bg-white">
+                <div class="text-center mb-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 12</span>
+                    <h2 class="text-3xl font-serif font-bold text-snoopyInk">¿Cuánto nos conocemos?</h2>
+                    <p class="text-xs text-gray-500 mt-1">Responde este mini quiz divertido de amor</p>
+                </div>
+
+                <div id="quiz-container" class="space-y-6 max-w-lg mx-auto">
+                    <!-- Question 1 -->
+                    <div class="p-4 bg-pinkSoft/40 rounded-xl border border-snoopyInk">
+                        <p class="font-bold text-sm text-snoopyInk mb-3">1. ¿Cuál es la palabra cariñosa que más me gusta decirte?</p>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <button onclick="answerQuiz(1, true)" class="p-2 bg-white border border-snoopyInk rounded hover:bg-pinkSoft font-medium">A) Cielito / Mi niña ❤️</button>
+                            <button onclick="answerQuiz(1, false)" class="p-2 bg-white border border-snoopyInk rounded hover:bg-pinkSoft font-medium">B) Desconocida JAJAJA</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="p-4 bg-pinkSoft/40 rounded-xl border border-snoopyInk">
+                        <p class="font-bold text-sm text-snoopyInk mb-3">2. ¿Quién es el perrito más tierno que acompaña esta página?</p>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <button onclick="answerQuiz(2, true)" class="p-2 bg-white border border-snoopyInk rounded hover:bg-pinkSoft font-medium">A) Snoopy 🐶</button>
+                            <button onclick="answerQuiz(2, false)" class="p-2 bg-white border border-snoopyInk rounded hover:bg-pinkSoft font-medium">B) Garfield JAJAJS</button>
+                        </div>
+                    </div>
+
+                    <div id="quiz-result" class="hidden p-4 bg-pinkSoft border-2 border-snoopyInk rounded-xl text-center font-bold text-pinkAccent text-sm">
+                        ¡Puntaje perfecto! Eres el amor de mi vida y nos conocemos a la perfección 🥰
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13 — CUPONES DE AMOR -->
+        <section id="sec-13" class="scroll-mt-24">
+            <div class="text-center mb-8">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 13</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk">Cupones de amor</h2>
+                <p class="text-xs text-gray-500 mt-1">Colección de vales canjeables cuando tú quieras</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Coupon Item 1 -->
+                <div id="coupon-val-1" onclick="redeemCouponCard('coupon-val-1', 'Un abrazo interminable')" class="peanuts-card p-4 bg-pinkSoft cursor-pointer hover:scale-102 transition relative">
+                    <div class="flex justify-between items-center text-xs font-bold text-pinkAccent border-b border-snoopyInk/20 pb-2 mb-2">
+                        <span>CUPÓN DE AMOR</span>
+                        <span>🎟️</span>
+                    </div>
+                    <h3 class="font-bold text-base text-snoopyInk">Un abrazo interminable</h3>
+                    <p class="text-xs text-gray-600 mt-1">Válido por un abrazo fuerte sin límite de tiempo, canjealo todos los días jejeje.</p>
+                    <span class="coupon-status-tag block text-center mt-3 text-[10px] font-bold bg-white border border-snoopyInk rounded py-1">Toca para canjear</span>
+                </div>
+
+                <!-- Coupon Item 2 -->
+                <div id="coupon-val-2" onclick="redeemCouponCard('coupon-val-2', 'Una cita especial')" class="peanuts-card p-4 bg-pinkSoft cursor-pointer hover:scale-102 transition relative">
+                    <div class="flex justify-between items-center text-xs font-bold text-pinkAccent border-b border-snoopyInk/20 pb-2 mb-2">
+                        <span>CUPÓN DE AMOR</span>
+                        <span>🎟️</span>
+                    </div>
+                    <h3 class="font-bold text-base text-snoopyInk">Una clase de química jsjsdjsj</h3>
+                    <p class="text-xs text-gray-600 mt-1">Acuerddate que fuerza es igual a masa por velocidad jeje.</p>
+                    <span class="coupon-status-tag block text-center mt-3 text-[10px] font-bold bg-white border border-snoopyInk rounded py-1">Toca para canjear</span>
+                </div>
+
+                <!-- Coupon Item 3 -->
+                <div id="coupon-val-3" onclick="redeemCouponCard('coupon-val-3', 'Una tarde de películas')" class="peanuts-card p-4 bg-pinkSoft cursor-pointer hover:scale-102 transition relative">
+                    <div class="flex justify-between items-center text-xs font-bold text-pinkAccent border-b border-snoopyInk/20 pb-2 mb-2">
+                        <span>CUPÓN DE AMOR</span>
+                        <span>🎟️</span>
+                    </div>
+                    <h3 class="font-bold text-base text-snoopyInk">Tarde de películas</h3>
+                    <p class="text-xs text-gray-600 mt-1">Maratón con snacks y cobijita.</p>
+                    <span class="coupon-status-tag block text-center mt-3 text-[10px] font-bold bg-white border border-snoopyInk rounded py-1">Toca para canjear</span>
+                </div>
+
+                <!-- Coupon Item 4 -->
+                <div id="coupon-val-4" onclick="redeemCouponCard('coupon-val-4', 'Una cartita hecha con amor')" class="peanuts-card p-4 bg-pinkSoft cursor-pointer hover:scale-102 transition relative">
+                    <div class="flex justify-between items-center text-xs font-bold text-pinkAccent border-b border-snoopyInk/20 pb-2 mb-2">
+                        <span>CUPÓN DE AMOR</span>
+                        <span>🎟️</span>
+                    </div>
+                    <h3 class="font-bold text-base text-snoopyInk">Cartita hecha a mano</h3>
+                    <p class="text-xs text-gray-600 mt-1">Una nota física llena de detalles bonitos.</p>
+                    <span class="coupon-status-tag block text-center mt-3 text-[10px] font-bold bg-white border border-snoopyInk rounded py-1">Toca para canjear</span>
+                </div>
+
+                <!-- Coupon Item 5 -->
+                <div id="coupon-val-5" onclick="redeemCouponCard('coupon-val-5', 'Un día entero para nosotros')" class="peanuts-card p-4 bg-pinkSoft cursor-pointer hover:scale-102 transition relative">
+                    <div class="flex justify-between items-center text-xs font-bold text-pinkAccent border-b border-snoopyInk/20 pb-2 mb-2">
+                        <span>CUPÓN DE AMOR</span>
+                        <span>🎟️</span>
+                    </div>
+                    <h3 class="font-bold text-base text-snoopyInk">Un día para nosotros</h3>
+                    <p class="text-xs text-gray-600 mt-1">Sin prisas, solo tú y yo disfrutando juntos isissi.</p>
+                    <span class="coupon-status-tag block text-center mt-3 text-[10px] font-bold bg-white border border-snoopyInk rounded py-1">Toca para canjear</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14 — NUESTROS PRÓXIMOS CAPÍTULOS -->
+        <section id="sec-14" class="scroll-mt-24 text-center">
+            <div class="peanuts-card p-8 bg-gradient-to-b from-white to-pinkSoft/50">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 14</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk mt-1">Nuestros próximos capítulos</h2>
+                <p class="text-xs text-gray-500 mt-1">Sueños, metas y viajes por cumplir juntos</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                    <div class="p-4 bg-white border-2 border-snoopyInk rounded-xl text-center">
+                        <span class="text-3xl">✈️</span>
+                        <h3 class="font-bold text-sm text-snoopyInk mt-2">Nuevos viajes</h3>
+                        <p class="text-xs text-gray-500 mt-1">Conocer lugares mágicos tomados de la mano.</p>
+                    </div>
+                    <div class="p-4 bg-white border-2 border-snoopyInk rounded-xl text-center">
+                        <span class="text-3xl">🏡</span>
+                        <h3 class="font-bold text-sm text-snoopyInk mt-2">Nuestros proyectos</h3>
+                        <p class="text-xs text-gray-500 mt-1">Construir cada día un futuro lleno de tranquilidad.</p>
+                    </div>
+                    <div class="p-4 bg-white border-2 border-snoopyInk rounded-xl text-center">
+                        <span class="text-3xl">✨</span>
+                        <h3 class="font-bold text-sm text-snoopyInk mt-2">Risas infinitas</h3>
+                        <p class="text-xs text-gray-500 mt-1">Seguir celebrando cada año tu vida con alegría.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 15 — UN MENSAJITO ESCONDIDO (TREASURE HUNT) -->
+        <section id="sec-15" class="scroll-mt-24">
+            <div class="peanuts-card p-6 sm:p-8 bg-white">
+                <div class="text-center mb-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 15</span>
+                    <h2 class="text-3xl font-serif font-bold text-snoopyInk">Un mensajito escondido</h2>
+                    <p class="text-xs text-gray-500 mt-1">Encuentra las 5 estrellas interactivas en este panel para desbloquear el secreto</p>
+                    <p id="star-hunt-progress" class="text-xs font-bold text-pinkAccent mt-2">Progreso: 0 / 5 estrellas encontradas 🌟</p>
+                </div>
+
+                <!-- Stars Container Area -->
+                <div class="relative w-full h-56 bg-pinkSoft/30 border-2 border-dashed border-snoopyInk rounded-2xl flex items-center justify-center p-4">
+                    <!-- 5 Interactive Hidden Stars -->
+                    <button onclick="collectHiddenStar(this, 1)" class="hidden-star-btn absolute top-6 left-10 text-2xl text-gray-300 hover:text-amber-400 transition">⭐</button>
+                    <button onclick="collectHiddenStar(this, 2)" class="hidden-star-btn absolute top-8 right-16 text-2xl text-gray-300 hover:text-amber-400 transition">⭐</button>
+                    <button onclick="collectHiddenStar(this, 3)" class="hidden-star-btn absolute bottom-6 left-1/4 text-2xl text-gray-300 hover:text-amber-400 transition">⭐</button>
+                    <button onclick="collectHiddenStar(this, 4)" class="hidden-star-btn absolute bottom-10 right-1/3 text-2xl text-gray-300 hover:text-amber-400 transition">⭐</button>
+                    <button onclick="collectHiddenStar(this, 5)" class="hidden-star-btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl text-gray-300 hover:text-amber-400 transition">⭐</button>
+
+                    <p id="unlocked-secret-text" class="hidden text-center font-serif text-sm sm:text-base text-pinkAccent font-bold px-4">
+                        💖 ¡Encontraste todas las estrellas! <br> "Eres la luz más brillante de todo mi universo mi Cielito."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 16 — EL ÚLTIMO ABRACITO -->
+        <section id="sec-16" class="scroll-mt-24 text-center">
+            <div class="peanuts-card p-8 bg-pinkSoft relative overflow-hidden">
+                <span class="text-xs font-bold uppercase tracking-widest text-pinkAccent">Sección 16</span>
+                <h2 class="text-3xl font-serif font-bold text-snoopyInk mt-1">El último abracito</h2>
+                
+                <!-- Snoopy and Charlie Brown Image -->
+                <div class="my-6 flex justify-center">
+                    <img src="https://pngimg.com/uploads/snoopy/snoopy_PNG43.png" 
+                         onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/en/2/22/Charlie_Brown_and_Snoopy.png';" 
+                         alt="Snoopy y Charlie Brown" 
+                         class="w-44 h-auto object-contain drop-shadow">
+                </div>
+
+                <p class="font-handwritten text-3xl font-bold text-pinkAccent mb-2">¡Feliz Cumpleaños, mi niña hermosa!</p>
+                <p class="text-xs sm:text-sm text-gray-700 max-w-md mx-auto leading-relaxed">
+                    Este pequeño universo fue creado enteramente para ti, con todo mi amor y dedicación para sacarte una sonrisa hoy y siempre. Te amo inmensamente, Cielito. ❤️
+                </p>
+
+                <div class="mt-8">
+                    <a href="#sec-01" class="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-snoopyInk font-bold text-xs rounded-full border-2 border-snoopyInk hover:bg-pinkMid transition">
+                        <span>Volver al inicio</span>
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-6 border-t border-snoopyInk/20 bg-white text-xs text-gray-500">
+        <p>Cielito’s Little Universe 💗 — 19 de Noviembre, 2026</p>
+    </footer>
+
+    <!-- WOODSTOCK TOAST NOTIFICATION -->
+    <div id="woodstock-toast" class="fixed bottom-4 right-4 z-50 hidden bg-white border-2 border-snoopyInk rounded-2xl p-4 shadow-xl max-w-xs flex items-center gap-3 animate-bounce">
+        <span class="text-2xl">🐤</span>
+        <p id="toast-message" class="text-xs font-bold text-snoopyInk">¡Mensajito de Snoopy!</p>
+    </div>
+
+    <!-- GENERAL MODAL CONTAINER -->
+    <div id="general-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl border-3 border-snoopyInk p-6 max-w-sm w-full text-center space-y-4 relative shadow-2xl">
+            <button onclick="closeGeneralModal()" class="absolute top-2 right-3 text-gray-400 hover:text-snoopyInk text-lg font-bold">✕</button>
+            <div id="modal-icon" class="text-4xl">✨</div>
+            <h3 id="modal-title" class="text-xl font-bold text-snoopyInk">Título del Modal</h3>
+            <p id="modal-body" class="text-xs sm:text-sm text-gray-600 leading-relaxed">Contenido del modal...</p>
+            <button onclick="closeGeneralModal()" class="px-6 py-2 bg-pinkAccent text-white font-bold text-xs rounded-full border-2 border-snoopyInk hover:bg-pinkDeep transition">
+                Entendido ❤️
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 16 Reasons Dynamic Generator ---
+        const reasonsList = [
+            "Por tu sonrisa bonita que me alegra el día",
+            "Por la dulzura de tus abrazos",
+            "Por como te digo mi amor",
+            "Por tus ojitos brillantes",
+            "Por nuestras pláticas infinitas",
+            "Por hacerme reír siempre",
+            "Por tu gran corazón",
+            "Por ser mi persona favorita",
+            "Por tu ternura única",
+            "Por escucharme con atención",
+            "Por acompañarme en todo",
+            "Por ser mi niña hermosa",
+            "Por darme paz",
+            "Por tus detalles sinceros",
+            "Por cada recuerdo juntos",
+            "Por existir y ser tú misma"
+        ];
+
+        const reasonsGrid = document.getElementById('reasons-grid');
+        reasonsList.forEach((reason, index) => {
+            const card = document.createElement('div');
+            card.className = 'peanuts-card-sm p-3 text-center cursor-pointer hover:bg-pinkSoft transition flex flex-col items-center justify-center min-h-[90px]';
+            card.onclick = () => revealReason(card, index + 1, reason);
+            card.innerHTML = `
+                <span class="text-pinkAccent text-lg font-bold">❤️</span>
+                <span class="text-[11px] font-bold text-snoopyInk mt-1">Razón #${index + 1}</span>
+            `;
+            reasonsGrid.appendChild(card);
+        });
+
+        function revealReason(element, num, text) {
+            element.classList.remove('bg-white');
+            element.classList.add('bg-pinkMid');
+            element.innerHTML = `
+                <span class="text-[10px] font-bold text-pinkAccent">#${num}</span>
+                <p class="text-[11px] font-semibold text-snoopyInk leading-tight mt-1">"${text}"</p>
+            `;
+            triggerConfetti();
+        }
+
+        // --- Letter Opening Logic ---
+        function openWelcomeLetter() {
+            document.getElementById('envelope-icon-container').classList.add('hidden');
+            document.getElementById('letter-content').classList.remove('hidden');
+            triggerConfetti();
+        }
+
+        // --- Modals Logic ---
+        function showMomentModal(title, text) {
+            document.getElementById('modal-icon').textContent = '📸';
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = text;
+            document.getElementById('general-modal').classList.remove('hidden');
+        }
+
+        function openOpenWhenModal(title, text) {
+            document.getElementById('modal-icon').textContent = '💌';
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = text;
+            document.getElementById('general-modal').classList.remove('hidden');
+        }
+
+        function openSecretGift() {
+            document.getElementById('modal-icon').textContent = '🎁';
+            document.getElementById('modal-title').textContent = '¡Sorpresa para Cielito!';
+            document.getElementById('modal-body').textContent = 'Este cupón virtual te otorga un día entero repleto de tus comidas favoritas, tus postres preferidos y mimos sin fin jejeje, seré pobre jsjsj. ¡Te amo!';
+            document.getElementById('general-modal').classList.remove('hidden');
+            triggerConfetti();
+        }
+
+        function closeGeneralModal() {
+            document.getElementById('general-modal').classList.add('hidden');
+        }
+
+        // --- Woodstock Toast Notification ---
+        function showWoodstockToast(msg) {
+            const toast = document.getElementById('woodstock-toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        function unlockSecretHeart() {
+            showWoodstockToast('¡Encontraste el corazón secreto del menú! ❤️ Te amo cielito.');
+            triggerConfetti();
+        }
+
+        // --- Candles Blowing Logic ---
+        let candlesBlown = 0;
+        function blowCandle(id) {
+            const flame = document.getElementById(`flame-${id}`);
+            if (flame && !flame.classList.contains('hidden')) {
+                flame.classList.add('hidden');
+                candlesBlown++;
+                if (candlesBlown >= 3) {
+                    document.getElementById('cake-wishes-done').classList.remove('hidden');
+                    triggerConfetti();
+                }
+            }
+        }
+
+        // --- Interactive Night Sky Stars Canvas ---
+        const skyCanvas = document.getElementById('sky-stars-canvas');
+        const skyCtx = skyCanvas.getContext('2d');
+        const wishes = [
+            "Que nunca pierdas esa sonrisa tan radiante.",
+            "Que cada día esté lleno de salud y paz.",
+            "Que sigamos cumpliendo metas juntos.",
+            "Que la felicidad te acompañe en cada paso.",
+            "Que siempre recuerdes lo mucho que te amo."
+        ];
+
+        function resizeSkyCanvas() {
+            skyCanvas.width = skyCanvas.parentElement.clientWidth;
+            skyCanvas.height = skyCanvas.parentElement.clientHeight;
+            drawSkyStars();
+        }
+
+        let skyStars = [];
+        function drawSkyStars() {
+            skyCtx.clearRect(0, 0, skyCanvas.width, skyCanvas.height);
+            skyStars = [];
+            for (let i = 0; i < 25; i++) {
+                const x = Math.random() * skyCanvas.width;
+                const y = Math.random() * skyCanvas.height;
+                const r = Math.random() * 3 + 2;
+                skyStars.push({ x, y, r, wish: wishes[i % wishes.length] });
+
+                skyCtx.beginPath();
+                skyCtx.arc(x, y, r, 0, Math.PI * 2);
+                skyCtx.fillStyle = '#FFE5EC';
+                skyCtx.fill();
+            }
+        }
+        window.addEventListener('resize', resizeSkyCanvas);
+
+        skyCanvas.addEventListener('click', (e) => {
+            const rect = skyCanvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            skyStars.forEach(star => {
+                const dist = Math.hypot(star.x - clickX, star.y - clickY);
+                if (dist < 20) {
+                    document.getElementById('star-wish-output').textContent = `✨ "${star.wish}"`;
+                    triggerConfetti();
+                }
+            });
+        });
+
+        // --- Quiz logic ---
+        function answerQuiz(qNum, isCorrect) {
+            if (isCorrect) {
+                document.getElementById('quiz-result').classList.remove('hidden');
+                triggerConfetti();
+            }
+        }
+
+        // --- Redeem Coupon Logic ---
+        function redeemCouponCard(id, title) {
+            const coupon = document.getElementById(id);
+            coupon.classList.remove('bg-pinkSoft');
+            coupon.classList.add('bg-pinkMid');
+            const tag = coupon.querySelector('.coupon-status-tag');
+            if (tag) tag.textContent = '✅ ¡Canjeado con éxito!';
+            showWoodstockToast(`¡Cupón "${title}" canjeado para Mi MOOORSSHH!`);
+            triggerConfetti();
+        }
+
+        // --- Section 08 Interactive Hug & Love Pills Logic ---
+        let hugCounter = 0;
+        function sendInteractiveHug() {
+            hugCounter++;
+            document.getElementById('hug-count').textContent = hugCounter;
+            showWoodstockToast(`¡Abracito apretado enviado a Cielito! ❤️ (#${hugCounter})`);
+            triggerConfetti();
+        }
+
+        function openLovePill(title, text) {
+            document.getElementById('modal-icon').textContent = '💌';
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = text;
+            document.getElementById('general-modal').classList.remove('hidden');
+            triggerConfetti();
+        }
+
+        // --- Hidden Stars Mini-Game ---
+        let foundStars = 0;
+        function collectHiddenStar(btn, num) {
+            if (!btn.classList.contains('hidden-star-found')) {
+                btn.classList.add('hidden-star-found');
+                btn.textContent = '🌟';
+                foundStars++;
+                document.getElementById('star-hunt-progress').textContent = `Progreso: ${foundStars} / 5 estrellas encontradas 🌟`;
+                
+                if (foundStars >= 5) {
+                    document.getElementById('unlocked-secret-text').classList.remove('hidden');
+                    triggerConfetti();
+                }
+            }
+        }
+
+        // --- Scroll Progress Bar ---
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progress-bar').style.width = scrolled + "%";
+        };
+
+        // --- Mobile Menu Toggle ---
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // --- Confetti Effect ---
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: ['#FFE5EC', '#FFC2D1', '#FF5C8A', '#E53935']
+                });
+            }
+        }
+
+        // --- Background Floating Hearts Canvas Animation ---
+        const heartsCanvas = document.getElementById('hero-hearts-canvas');
+        const hCtx = heartsCanvas.getContext('2d');
+        let heartParticles = [];
+
+        function resizeHeartsCanvas() {
+            heartsCanvas.width = window.innerWidth;
+            heartsCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeHeartsCanvas);
+
+        class HeartParticle {
+            constructor() {
+                this.x = Math.random() * heartsCanvas.width;
+                this.y = heartsCanvas.height + 20;
+                this.speed = Math.random() * 1 + 0.5;
+                this.size = Math.random() * 8 + 6;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < -20) this.y = heartsCanvas.height + 20;
+            }
+            draw() {
+                hCtx.save();
+                hCtx.globalAlpha = this.opacity;
+                hCtx.fillStyle = '#FFC2D1';
+                hCtx.beginPath();
+                hCtx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+                hCtx.fill();
+                hCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 20; i++) heartParticles.push(new HeartParticle());
+
+        function animateHearts() {
+            hCtx.clearRect(0, 0, heartsCanvas.width, heartsCanvas.height);
+            heartParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateHearts);
+        }
+
+        window.onload = function() {
+            resizeHeartsCanvas();
+            resizeSkyCanvas();
+            animateHearts();
+        };
+    </script>
+</body>
+</html>  <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
